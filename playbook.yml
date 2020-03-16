@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install nginx
+      apt: name=nginx update_cache=yes
+      
+    - name: start nginx on boot
+      service: name=nginx enabled=yes state=started

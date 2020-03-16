@@ -1,0 +1,36 @@
+{
+  "variables": {
+    "aws_region" : "us-east-1",
+    "aws_access_key" : "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key" : "{{env `AWS_SECRET_ACCESS_KEY`}}"
+  },
+  "builders": [
+    {
+      "type" : "amazon-ebs",
+      "region": "{{user `aws_region`}}",
+      "access_key" : "{{user `aws_access_key`}}",
+      "secret_key" : "{{user `aws_secret_key`}}", 
+      "source_ami": "ami-08bc77a2c7eb2b1da",
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ami_name": "AppTier-{{isotime | clean_resource_name }}",
+      "ami_description": "Getting Started with Packer ",
+      "tags": {
+        "role": "AppTier"
+      }, 
+      "run_tags": {
+        "role": "buildSystem"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "ansible.sh"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "./playbook.yml"
+    }
+  ]
+}
